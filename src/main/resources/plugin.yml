@@ -1,0 +1,5 @@
+name: ServerHelperBridge
+version: '${version}'
+main: github.kasuminova.serverhelper.ServerHelperBridge
+prefix: ServerHelperBridge
+authors: [ KasumiNova ]
