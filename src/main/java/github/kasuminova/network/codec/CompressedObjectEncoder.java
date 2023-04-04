@@ -19,13 +19,14 @@ public class CompressedObjectEncoder extends MessageToByteEncoder<Serializable> 
         ByteBufOutputStream bout = new ByteBufOutputStream(out);
         SnappyOutputStream snappy = new SnappyOutputStream(bout);
         ObjectEncoderOutputStream oos = new ObjectEncoderOutputStream(snappy);
+
         try {
             bout.write(LENGTH_PLACEHOLDER);
             oos.writeObject(msg);
-            snappy.flush();
         } finally {
             oos.close();
             snappy.close();
+            bout.close();
         }
 
         int endIdx = out.writerIndex();

@@ -1,12 +1,11 @@
 package github.kasuminova.network.codec;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
-import org.xerial.snappy.Snappy;
-
-import java.io.ByteArrayInputStream;
+import org.xerial.snappy.SnappyInputStream;
 
 public class CompressedObjectDecoder extends LengthFieldBasedFrameDecoder {
     private final ClassLoader classLoader;
@@ -23,9 +22,16 @@ public class CompressedObjectDecoder extends LengthFieldBasedFrameDecoder {
             return null;
         }
 
-        byte[] uncompressed = Snappy.uncompress(frame.array());
-        try (ObjectDecoderInputStream ois = new ObjectDecoderInputStream(new ByteArrayInputStream(uncompressed), classLoader)) {
+        ByteBufInputStream bis = new ByteBufInputStream(frame);
+        SnappyInputStream snappy = new SnappyInputStream(bis);
+        ObjectDecoderInputStream ois = new ObjectDecoderInputStream(snappy, classLoader);
+
+        try {
             return ois.readObject();
+        } finally {
+            ois.close();
+            snappy.close();
+            bis.close();
         }
     }
 }

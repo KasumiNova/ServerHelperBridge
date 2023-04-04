@@ -1,4 +1,4 @@
-package github.kasuminova.kasuminovabot.module.serverhelper.network.handler;
+package github.kasuminova.serverhelper.network.handler;
 
 import github.kasuminova.network.message.MessageProcessor;
 import io.netty.channel.ChannelHandlerContext;

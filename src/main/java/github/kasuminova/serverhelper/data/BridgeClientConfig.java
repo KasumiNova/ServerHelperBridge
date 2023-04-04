@@ -1,4 +1,4 @@
-package github.kasuminova.serverhelper.network;
+package github.kasuminova.serverhelper.data;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

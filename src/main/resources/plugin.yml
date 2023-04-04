@@ -1,5 +1,24 @@
 name: ServerHelperBridge
-version: '${version}'
+version: '1.0.0'
 main: github.kasuminova.serverhelper.ServerHelperBridge
 prefix: ServerHelperBridge
 authors: [ KasumiNova ]
+
+commands:
+  serverhelper:
+    description: ServerHelperBridge Commands.
+    usage: /serverhelper
+
+permissions:
+  serverhelper.*:
+    description: ServerHelperBridge Commands.
+    default: op
+    children:
+      serverhelper.help: true
+      serverhelper.reload: true
+  serverhelper.help:
+    description: Show Help Commands.
+    default: false
+  serverhelper.reload:
+    description: Reload plugin and reconnect center server.
+    default: false

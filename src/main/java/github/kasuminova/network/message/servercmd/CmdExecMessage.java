@@ -7,9 +7,9 @@ public class CmdExecMessage implements Serializable {
     public String serverName;
     public String cmd;
 
-    public CmdExecMessage(String sender, String serverName, String cmd) {
-        this.sender = sender;
+    public CmdExecMessage(String serverName, String sender, String cmd) {
         this.serverName = serverName;
+        this.sender = sender;
         this.cmd = cmd;
     }
 }

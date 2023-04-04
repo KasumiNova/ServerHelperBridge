@@ -6,7 +6,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class ServerHelperCommands implements CommandExecutor {
+public class ServerHelperCommandExecutor implements CommandExecutor {
+    public static final ServerHelperCommandExecutor INSTANCE = new ServerHelperCommandExecutor();
+
+    private ServerHelperCommandExecutor() {
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -21,9 +25,10 @@ public class ServerHelperCommands implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "你没有权限。");
                     break;
                 }
+                sender.sendMessage(ChatColor.GREEN + "[" + ServerHelperBridge.instance.getName() + "] 重载中！");
                 ServerHelperBridge.instance.onDisable();
+                ServerHelperBridge.instance.reloadConfig();
                 ServerHelperBridge.instance.onEnable();
-                sender.sendMessage(ChatColor.GREEN + "ServerHelperBridge 重载完成！");
                 break;
             case "help":
                 sendHelpMessage(sender);

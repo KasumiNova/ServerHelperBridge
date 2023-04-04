@@ -1,0 +1,17 @@
+BridgeClient:
+  # 中心服务器（BC 插件服务器）的 IP 地址。
+  IP: "127.0.0.1"
+  # 中心服务器（BC 插件服务器）的端口。
+  Port: 20000
+  # 子服名称。
+  ServerName: "SERVER"
+  # AccessToken，类似密码，必须与中心服务器的 SubServerAccessToken 相同才能正常使用。
+  AccessToken: "123abc"
+
+# 强制应用所有世界生成怪物，即使先前被关闭。
+ForceAllWorldSpawnMonsters: false
+# 当以下世界在列表中时，强制使世界生成怪物，即使先前被关闭。
+ForceSpawnMonsterWorlds: []
+
+# 服务器启动后，将会执行下方列表中的指令
+StartCommands: []

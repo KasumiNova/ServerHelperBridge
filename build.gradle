@@ -6,7 +6,12 @@ group = 'github.kasuminova'
 version = '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+    maven {
+        url 'https://maven.aliyun.com/nexus/content/groups/public/'
+    }
+    maven {
+        url 'https://maven.aliyun.com/repository/central'
+    }
     maven {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
@@ -15,10 +20,13 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    mavenCentral()
 }
 
 dependencies {
-compileOnly "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT"
+    compileOnly 'io.netty:netty-all:4.1.9.Final'
+    implementation 'org.xerial.snappy:snappy-java:1.1.9.1'
 }
 
 def targetJavaVersion = 8
@@ -31,9 +39,17 @@ java {
     }
 }
 
+jar {
+    from {
+        (configurations.runtimeClasspath).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release = targetJavaVersion
+        options.release = targetJavaVersion as Property<Integer>
     }
 }
 

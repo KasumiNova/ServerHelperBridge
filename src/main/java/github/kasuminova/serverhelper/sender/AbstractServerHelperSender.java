@@ -2,7 +2,6 @@ package github.kasuminova.serverhelper.sender;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -13,30 +12,15 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Set;
 
-public class ServerHelperSender implements ConsoleCommandSender {
-    @Override
-    public void sendMessage(String message) {
-
-    }
-
-    @Override
-    public void sendMessage(String[] messages) {
-
-    }
-
+public abstract class AbstractServerHelperSender implements ConsoleCommandSender {
     @Override
     public Server getServer() {
         return Bukkit.getServer();
     }
 
     @Override
-    public String getName() {
-        return "ServerHelper_Executor";
-    }
-
-    @Override
     public Spigot spigot() {
-        return new SpigotSenderAdapter();
+        return new SpigotSenderAdapter(this);
     }
 
     @Override
@@ -96,7 +80,7 @@ public class ServerHelperSender implements ConsoleCommandSender {
 
     @Override
     public boolean isOp() {
-        return false;
+        return true;
     }
 
     @Override
@@ -126,11 +110,6 @@ public class ServerHelperSender implements ConsoleCommandSender {
 
     @Override
     public void abandonConversation(Conversation conversation, ConversationAbandonedEvent details) {
-
-    }
-
-    @Override
-    public void sendRawMessage(String message) {
 
     }
 }
