@@ -16,6 +16,7 @@ import java.io.Serializable;
 public class BridgeClient {
     private final ConnectionDaemonThread connectionDaemonThread = new ConnectionDaemonThread(this);
     private final MessageSyncThread messageSyncThread = new MessageSyncThread(this);
+    private volatile long lastHeartbeat = System.currentTimeMillis();
     private ChannelFuture future = null;
     private EventLoopGroup work;
     private ChannelHandlerContext ctx = null;
@@ -58,6 +59,14 @@ public class BridgeClient {
         } catch (Exception e) {
             ServerHelperBridge.instance.logger.warning(ThrowableUtil.stackTraceToString(e));
         }
+    }
+
+    public void updateHeartbeatTime() {
+        lastHeartbeat = System.currentTimeMillis();
+    }
+
+    public long getLastHeartbeat() {
+        return lastHeartbeat;
     }
 
     public ChannelHandlerContext getCtx() {

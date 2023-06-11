@@ -1,6 +1,7 @@
 package github.kasuminova.serverhelper.extensions;
 
 import github.kasuminova.serverhelper.ServerHelperBridge;
+import io.netty.util.internal.ThrowableUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -27,7 +28,13 @@ public class ServerStartCommands {
         ServerHelperBridge.instance.logger.info("执行指令中！");
         for (String command : commandList) {
             ServerHelperBridge.instance.logger.info("执行预设中的指令：" + command);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            Bukkit.getScheduler().runTask(ServerHelperBridge.instance, () -> {
+                try {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                } catch (Exception e) {
+                    ServerHelperBridge.instance.logger.warning(ThrowableUtil.stackTraceToString(e));
+                }
+            });
         }
     }
 }

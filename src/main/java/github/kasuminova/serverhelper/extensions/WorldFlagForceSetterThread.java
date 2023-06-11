@@ -4,6 +4,7 @@ import github.kasuminova.serverhelper.ServerHelperBridge;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class WorldFlagForceSetterThread implements Runnable {
                 continue;
             }
 
-            logger.info("世界 " + worldName + " 怪物生成已关闭，强制启用中...");
+//            logger.info("世界 " + worldName + " 怪物生成已关闭，强制启用中...");
             world.setSpawnFlags(true, true);
         }
     }

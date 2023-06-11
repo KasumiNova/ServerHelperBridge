@@ -1,6 +1,8 @@
 package github.kasuminova.serverhelper.network;
 
+import github.kasuminova.network.message.protocol.HeartbeatMessage;
 import github.kasuminova.serverhelper.ServerHelperBridge;
+import io.netty.channel.ChannelFuture;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
@@ -28,11 +30,21 @@ public class ConnectionDaemonThread implements Runnable {
 
     @Override
     public void run() {
+        cl.updateHeartbeatTime();
+
         ServerHelperBridge.instance.logger.info("连接守护线程已启动.");
 
         logic:
         while (!Thread.currentThread().isInterrupted()) {
-            if (cl.getFuture() != null) {
+            ChannelFuture future = cl.getFuture();
+            if (future != null) {
+                if (cl.getLastHeartbeat() + 10000 <= System.currentTimeMillis()) {
+                    ServerHelperBridge.instance.logger.warning("中心服务器响应超时。");
+                    future.channel().close();
+                    continue;
+                }
+
+                future.channel().writeAndFlush(new HeartbeatMessage());
                 LockSupport.parkNanos(1000L * 1000 * 1000);
                 continue;
             }
@@ -41,6 +53,7 @@ public class ConnectionDaemonThread implements Runnable {
             boolean isConnected = false;
             int retryCount = 0;
             do {
+                cl.updateHeartbeatTime();
                 try {
                     cl.connect();
                     isConnected = true;
