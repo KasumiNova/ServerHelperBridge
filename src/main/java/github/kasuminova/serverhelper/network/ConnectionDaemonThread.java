@@ -36,16 +36,17 @@ public class ConnectionDaemonThread implements Runnable {
 
         logic:
         while (!Thread.currentThread().isInterrupted()) {
+            LockSupport.parkNanos(1000L * 1000 * 1000);
+
             ChannelFuture future = cl.getFuture();
             if (future != null) {
-                if (cl.getLastHeartbeat() + 10000 <= System.currentTimeMillis()) {
+                if (cl.getLastHeartbeat() + 30000 <= System.currentTimeMillis()) {
                     ServerHelperBridge.instance.logger.warning("中心服务器响应超时。");
-                    future.channel().close();
+                    cl.disconnect();
                     continue;
                 }
 
                 future.channel().writeAndFlush(new HeartbeatMessage());
-                LockSupport.parkNanos(1000L * 1000 * 1000);
                 continue;
             }
 

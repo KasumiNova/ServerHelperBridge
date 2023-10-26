@@ -3,6 +3,7 @@ package github.kasuminova.serverhelper;
 import github.kasuminova.serverhelper.command.ServerHelperCommandExecutor;
 import github.kasuminova.serverhelper.data.BridgeClientConfig;
 import github.kasuminova.serverhelper.extensions.ServerStartCommands;
+import github.kasuminova.serverhelper.extensions.ThreadAffinity;
 import github.kasuminova.serverhelper.extensions.WorldFlagForceSetterThread;
 import github.kasuminova.serverhelper.extensions.handler.WorldEventHandler;
 import github.kasuminova.serverhelper.network.BridgeClient;
@@ -22,9 +23,13 @@ public final class ServerHelperBridge extends JavaPlugin {
     public static ServerHelperBridge instance = null;
     public FileConfiguration config = null;
     public Logger logger = null;
+
     public BridgeClient cl = null;
+
     public WorldEventHandler worldEventHandler;
     public WorldFlagForceSetterThread flagForceSetterThread;
+
+    public ThreadAffinity threadAffinity;
 
     @Override
     public void onLoad() {
@@ -42,21 +47,26 @@ public final class ServerHelperBridge extends JavaPlugin {
         try {
             if (!configFile.exists()) {
                 if (!dataFolder.exists()) {
-                    if (!dataFolder.mkdirs()) {
+                    if (dataFolder.mkdirs()) {
+                        FileUtils.extractJarFile("/config.yml", configFile.toPath());
+                    } else {
                         logger.warning(dataFolder.getPath() + " 创建失败！");
                     }
                 }
-                FileUtils.extractJarFile("/config.yml", configFile.toPath());
             }
             config.load(configFile);
         } catch (Exception e) {
-            logger.warning("配置文件加载失败！");
+            logger.warning("主配置文件加载失败！");
             logger.warning(ThrowableUtil.stackTraceToString(e));
         }
 
         BridgeClientConfig bridgeClientConfig = new BridgeClientConfig();
         bridgeClientConfig.loadFromConfig(config);
         cl = new BridgeClient(bridgeClientConfig);
+
+        threadAffinity = new ThreadAffinity();
+        threadAffinity.loadFromConfig(config);
+        threadAffinity.setThreadAffinity();
 
         CompletableFuture.runAsync(() -> {
             try {

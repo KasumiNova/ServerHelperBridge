@@ -15,3 +15,13 @@ ForceSpawnMonsterWorlds: []
 
 # 服务器启动后，将会执行下方列表中的指令
 StartCommands: []
+
+# 线程亲和性设置
+ThreadAffinity:
+  # 为服务端主线程指定 CPU，使线程只能在被指定的 CPU 上运行。
+  ServerThread:
+    # CPU ID，从 0 开始，最大值不超过服务器的 CPU 总数量 - 1，不得为负数。
+    # 例如 CPU 数量为 16，则可配置的范围为 0 - 15。
+    # 注：不支持超过 64 核心的配置
+    Affinity:
+      - 0

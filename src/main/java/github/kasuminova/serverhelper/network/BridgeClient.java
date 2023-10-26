@@ -28,6 +28,9 @@ public class BridgeClient {
 
     public void connect() throws Exception {
         if (work != null && future != null) disconnect();
+        if (work != null) {
+            work.shutdownGracefully();
+        }
 
         work = new NioEventLoopGroup();
 
