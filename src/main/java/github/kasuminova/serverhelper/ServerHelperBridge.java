@@ -29,7 +29,7 @@ public final class ServerHelperBridge extends JavaPlugin {
     public WorldEventHandler worldEventHandler;
     public WorldFlagForceSetterThread flagForceSetterThread;
 
-    public ThreadAffinity threadAffinity;
+//    public ThreadAffinity threadAffinity;
 
     @Override
     public void onLoad() {
@@ -64,9 +64,9 @@ public final class ServerHelperBridge extends JavaPlugin {
         bridgeClientConfig.loadFromConfig(config);
         cl = new BridgeClient(bridgeClientConfig);
 
-        threadAffinity = new ThreadAffinity();
-        threadAffinity.loadFromConfig(config);
-        threadAffinity.setThreadAffinity();
+//        threadAffinity = new ThreadAffinity();
+//        threadAffinity.loadFromConfig(config);
+//        threadAffinity.setThreadAffinity();
 
         CompletableFuture.runAsync(() -> {
             try {

@@ -4,6 +4,8 @@ import github.kasuminova.serverhelper.ServerHelperBridge;
 import net.openhft.affinity.Affinity;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.BitSet;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -39,10 +41,19 @@ public class ThreadAffinity {
     }
 
     public void setThreadAffinity() {
-        Affinity.setAffinity(affinity);
-
-        ServerHelperBridge.instance.logger.info(String.format(
-                "设置服务端主线程 CPU 分配成功！现在限定 CPU：%s", affinity.toString())
-        );
+        Thread currentThread = Thread.currentThread();
+        String currThreadName = currentThread.getName();
+        try {
+            Affinity.setAffinity(affinity);
+            ServerHelperBridge.instance.logger.info(String.format(
+                    "线程 %s CPU 分配成功！现在限定 CPU：%s", currThreadName, affinity.toString())
+            );
+        } catch (Exception e) {
+            ServerHelperBridge.instance.logger.warning(String.format("线程 %s CPU 分配失败！", currThreadName));
+        }
+        if (currThreadName.equalsIgnoreCase("Server Thread")) {
+            currentThread.setPriority(Thread.MAX_PRIORITY);
+            ServerHelperBridge.instance.logger.info("已设置服务端线程优先级至最高。");
+        }
     }
 }

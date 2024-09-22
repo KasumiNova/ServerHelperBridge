@@ -3,10 +3,7 @@ package github.kasuminova.serverhelper.network;
 import github.kasuminova.serverhelper.ServerHelperBridge;
 import github.kasuminova.serverhelper.data.BridgeClientConfig;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.internal.ThrowableUtil;
@@ -35,8 +32,9 @@ public class BridgeClient {
         work = new NioEventLoopGroup();
 
         Bootstrap bootstrap = new Bootstrap();
+        Class<?> NioSocketChannel = getClass().getClassLoader().loadClass("io.netty.channel.socket.nio.NioSocketChannel");
         bootstrap.group(work)
-                .channel(NioSocketChannel.class)
+                .channel((Class<? extends Channel>) NioSocketChannel)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new ClientInitializer(this));
 
